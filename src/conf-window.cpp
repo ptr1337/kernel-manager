@@ -105,7 +105,7 @@ GENERATE_CONST_LOOKUP_OPTION_VALUES(tickless_mode, "full", "idle", "perodic")
 GENERATE_CONST_LOOKUP_OPTION_VALUES(preempt_mode, "full", "lazy", "voluntary", "none")
 GENERATE_CONST_LOOKUP_OPTION_VALUES(lto_mode, "none", "full", "thin")
 GENERATE_CONST_LOOKUP_OPTION_VALUES(hugepage_mode, "always", "madvise")
-GENERATE_CONST_LOOKUP_OPTION_VALUES(cpu_opt_mode, "manual", "generic", "native_amd", "native_intel", "zen", "zen2", "zen3", "sandybridge", "ivybridge", "haswell", "icelake", "tigerlake", "alderlake")
+GENERATE_CONST_LOOKUP_OPTION_VALUES(cpu_opt_mode, "manual", "x86-64", "x86-64-v2", "x86-64-v3", "x86-64-v4", "Zen 4", "Native")
 
 // NOLINTEND(cppcoreguidelines-macro-usage)
 
@@ -409,7 +409,6 @@ std::string ConfWindow::get_all_set_values() const noexcept {
     result += convert_to_var_assign_empty_wrapped("hardly", checkstate_checked(options_page_ui_obj->hardly_check));
     result += convert_to_var_assign_empty_wrapped("per_gov", checkstate_checked(options_page_ui_obj->perfgovern_check));
     result += convert_to_var_assign_empty_wrapped("tcp_bbr3", checkstate_checked(options_page_ui_obj->tcpbbr_check));
-    result += convert_to_var_assign_empty_wrapped("auto_optim", checkstate_checked(options_page_ui_obj->autooptim_check));
 
     result += convert_to_var_assign_empty_wrapped("cachy_config", checkstate_checked(options_page_ui_obj->cachyconfig_check));
     result += convert_to_var_assign_empty_wrapped("nconfig", checkstate_checked(options_page_ui_obj->nconfig_check));
@@ -518,13 +517,13 @@ ConfWindow::ConfWindow(QWidget* parent)
 
     /* clang-format off */
     QStringList cpu_optims;
-    cpu_optims << "Disabled"
-               << "Generic"
-               << "Native AMD"
-               << "Native Intel"
-               << "Zen" << "Zen2" << "Zen3"
-               << "Sandy Bridge" << "Ivy Bridge" << "Haswell"
-               << "Icelake" << "Tiger Lake" << "Alder Lake";
+    cpu_optims << "Disabled" // Corresponds to "manual"
+               << "x86-64"
+               << "x86-64-v2"
+               << "x86-64-v3"
+               << "x86-64-v4"
+               << "Zen 4"
+               << "Native";
     options_page_ui_obj->processor_opt_combo_box->addItems(cpu_optims);
     /* clang-format on */
 
@@ -680,7 +679,6 @@ void ConfWindow::on_save() noexcept {
     config_options.hardly_check     = checkstate_checked(options_page_ui_obj->hardly_check);
     config_options.per_gov_check    = checkstate_checked(options_page_ui_obj->perfgovern_check);
     config_options.tcp_bbr3_check   = checkstate_checked(options_page_ui_obj->tcpbbr_check);
-    config_options.auto_optim_check = checkstate_checked(options_page_ui_obj->autooptim_check);
 
     config_options.cachy_config_check        = checkstate_checked(options_page_ui_obj->cachyconfig_check);
     config_options.nconfig_check             = checkstate_checked(options_page_ui_obj->nconfig_check);
@@ -744,7 +742,6 @@ void ConfWindow::on_load() noexcept {
     set_checkstate(options_page_ui_obj->hardly_check, config_options->hardly_check);
     set_checkstate(options_page_ui_obj->perfgovern_check, config_options->per_gov_check);
     set_checkstate(options_page_ui_obj->tcpbbr_check, config_options->tcp_bbr3_check);
-    set_checkstate(options_page_ui_obj->autooptim_check, config_options->auto_optim_check);
 
     set_checkstate(options_page_ui_obj->cachyconfig_check, config_options->cachy_config_check);
     set_checkstate(options_page_ui_obj->nconfig_check, config_options->nconfig_check);
